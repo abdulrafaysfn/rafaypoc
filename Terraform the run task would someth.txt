@@ -1,0 +1,8 @@
+Terraform: the run task would something like this (a terraform resource basically)
+
+resource "tfe_run_task" "log_transform_task" {
+  name       = "Transform Logs to MongoDB"
+  workspace  = "your-terraform-workspace-id"
+  endpoint   = "https://your-endpoint-for-log-processing" # Lambda or API
+  hmac_key   = "your-secret-hmac-key"
+}
