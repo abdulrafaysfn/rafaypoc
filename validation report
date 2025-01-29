@@ -1,0 +1,118 @@
+Validation Report: DBMS Solution for Terraform Production Log Data (Metrics/Analysis)
+
+Date: [Insert Date]
+Prepared By: [Your Name]
+Project: Terraform Apply Log Storage & Querying
+Status: Validation Phase
+
+1. Objective
+
+The purpose of this validation report is to assess the feasibility, security, and performance of the proposed Redis-based DBMS solution for storing and querying Terraform Enterprise (TFE) apply logs from production. This validation ensures the plan meets business and technical requirements before moving to full deployment.
+
+2. Summary of Decisions Made
+
+2.1. Database Solution Selection
+	•	Final Decision: Use Redis for log storage and querying.
+	•	Reasoning:
+	•	MongoDB: Ruled out due to high costs and long onboarding process.
+	•	PostgreSQL: Considered but deprioritized due to slower deployment and query limitations.
+	•	Redis: Chosen for its high-speed querying, scalability, and existing internal use within Terraform Enterprise.
+
+2.2. Infrastructure Deployment
+	•	Environments:
+	•	POC (Lower Lanes) – for testing.
+	•	Production – for actual log storage.
+	•	Server Allocation:
+	•	3 servers per environment (Total: 6).
+	•	Load balancer setup for high availability and accessibility.
+	•	Security Measures:
+	•	TLS-enabled Redis deployment.
+	•	LDAP integration for access control (if feasible).
+	•	Backup user authentication (DMP Analytics) if LDAP is not integrated immediately.
+
+2.3. Log Ingestion & Querying
+	•	Log Source: Apply logs stored in S3.
+	•	Log Processing: Logs will be pulled from S3, transformed into Redis-compatible schema, and stored in Redis Streams for efficient querying.
+	•	Querying Needs:
+	•	Logs can be searched by RUN ID, Workspace ID, Timestamp, and Status.
+	•	Queries will be optimized for reporting and metrics generation.
+
+3. Validation Criteria
+
+The following criteria were evaluated to ensure the feasibility of the proposed solution.
+
+3.1. Infrastructure Readiness
+
+Criteria	Status	Details
+Servers allocated	✅ Yes	3 servers in POC, 3 in Production.
+Load balancer setup	⚠ Pending	DNS records and load balancer configuration needed.
+Namespace allocation	✅ Yes	Redis servers will reside in POC and Production namespaces.
+ATAS onboarding	⚠ In Progress	Expected completion: 2 weeks.
+
+3.2. Security & Access Control
+
+Criteria	Status	Details
+TLS Encryption	✅ Yes	Redis must have TLS enabled for secure access.
+LDAP Integration	⚠ Pending	If LDAP is not feasible, fallback user authentication will be used.
+Role-Based Access Control (RBAC)	⚠ Pending	Needs testing for granular access for different teams.
+
+3.3. Log Ingestion Pipeline
+
+Criteria	Status	Details
+S3 API Access	✅ Yes	Apply logs can be fetched from S3.
+Log Transformation	⚠ In Progress	Need to finalize schema for Redis storage.
+Redis Storage Format	✅ Yes	Using Redis Streams for structured querying.
+
+3.4. Query Performance & Scalability
+
+Criteria	Status	Details
+Efficient Querying	✅ Yes	Redis Streams allow querying by RUN ID, timestamps, status.
+Query Complexity Handling	⚠ Pending	Needs testing to confirm Redis performance under large datasets.
+Scalability	✅ Yes	Redis can scale by adding replicas if needed.
+
+4. Identified Risks & Challenges
+
+Risk	Impact	Mitigation
+LDAP integration delays	Medium	Use DMP Analytics user for initial access control.
+Query performance concerns under large loads	High	Optimize indexing, test with real data.
+ATAS onboarding delays	High	Parallel processing of AD and Power Broker role setup.
+Load balancer configuration delays	Medium	Request DNS records early in the process.
+
+5. Next Steps & Recommendations
+
+5.1. Immediate Next Steps
+
+Task	Owner	Deadline
+Finalize Redis deployment plan (including cluster setup)	[Your Name]	[Date]
+Complete LDAP integration validation	[Security Team]	[Date]
+Confirm log ingestion automation workflow	[DevOps Team]	[Date]
+Validate Redis query performance under expected loads	[DB Team]	[Date]
+Request and configure load balancer and DNS records	[Network Team]	[Date]
+
+5.2. Final Go/No-Go Criteria
+
+Before moving forward with full deployment, we must confirm:
+	•	Infrastructure readiness: Redis servers, load balancer, and ATAS onboarding completed.
+	•	Security validation: TLS enabled, LDAP authentication or fallback user configured.
+	•	Data pipeline validation: Log ingestion from S3 and transformation process confirmed.
+	•	Performance testing results: Queries perform efficiently under expected data loads.
+
+Once these criteria are met, we can proceed with production deployment.
+
+6. Conclusion
+
+The validation process confirms that Redis is a feasible choice for storing and querying Terraform apply logs. While some components are still in progress (ATAS onboarding, LDAP integration, query optimization), the overall plan is viable with minor refinements.
+
+Key Next Steps: Finalizing infrastructure setup, automating log ingestion, and testing query performance. If no major blockers arise, deployment will proceed shortly after Quartz go-live.
+
+Approval
+	•	Validated By: [Your Name]
+	•	Reviewed By: [Lead/Manager Name]
+	•	Date: [Insert Date]
+	•	Status: ✅ Approved for next steps / ⚠ Pending refinements
+
+Notes:
+
+This report serves as a checkpoint before full-scale deployment. If any risks escalate, adjustments may be required before moving to production.
+
+Would you like any adjustments or additional details added before submitting? 🚀
